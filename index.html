@@ -581,7 +581,6 @@
 
 
 
-
 <footer style="font-size: 11px; color: #888; padding: 30px 20px; text-align: center; line-height: 1.8; font-family: sans-serif;">
   <div style="margin-bottom: 8px;">
     <!-- 봇이 JS를 실행 못해도 기본값은 읽어갈 수 있게 연도를 미리 적어둡니다 -->
@@ -616,9 +615,12 @@
       const second = String(kstDate.getSeconds()).padStart(2, '0');
 
       // YYYY-MM-DD 형식 (footer 보여주기용)
-      const formattedDate = 20살자동차보험료${year}-${month}-${day}20살자동차보험료;
+      // ********** 변경된 부분: 백틱 대신 + 기호 사용 **********
+      const formattedDate = year + '-' + month + '-' + day;
+      
       // ISO 8601 형식 (검색엔진이 가장 좋아하는 표준 포맷)
-      const isoDateTime = 20살자동차보험료${year}-${month}-${day}T${hour}:${minute}:${second}+09:0020살자동차보험료;
+      // ********** 변경된 부분: 백틱 대신 + 기호 사용 **********
+      const isoDateTime = year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second + '+09:00';
       
       return { year, formattedDate, isoDateTime };
     }
@@ -671,16 +673,18 @@
     // ----------------------------------------------------------------------
     // 3. SEO 메타 태그 업데이트 (Naver/Google 공통)
     // ----------------------------------------------------------------------
-    function setMetaTag(attrType, attrName, content) {
-      let selector = 20살자동차보험료meta[${attrType}="${attrName}"]20살자동차보험료;
-      let meta = document.querySelector(selector);
-      if (!meta) {
-        meta = document.createElement('meta');
-        meta.setAttribute(attrType, attrName);
-        document.head.appendChild(meta);
-      }
-      meta.content = content;
-    }
+function setMetaTag(attrType, attrName, content) {
+  // 백틱 대신 더하기 기호(+)를 사용하여 문자열 결합
+  let selector = 'meta[' + attrType + '="' + attrName + '"]';
+  
+  let meta = document.querySelector(selector);
+  if (!meta) {
+    meta = document.createElement('meta');
+    meta.setAttribute(attrType, attrName);
+    document.head.appendChild(meta);
+  }
+  meta.content = content;
+}
 
     function updateSeoMetaTags(data) {
       // (A) Naver/Google 공통: Open Graph 수정일 (매우 중요)
@@ -693,13 +697,13 @@
       setMetaTag('name', 'date', data.formattedDate);
 
       // (D) 저작권 정보 갱신 (네이버 소유 확인 시 참고)
-      setMetaTag('name', 'copyright', 20살자동차보험료${data.year} ${document.title}20살자동차보험료);
+      // ********** 변경된 부분: 백틱 대신 + 기호 사용 **********
+      setMetaTag('name', 'copyright', data.year + ' ' + document.title);
     }
 
     // ----------------------------------------------------------------------
     // 4. [핵심 업그레이드] JSON-LD 구조화 데이터 삽입/업데이트
     // ----------------------------------------------------------------------
-    // JSON-LD는 메타 태그보다 강력한 최신 표준으로, 검색엔진이 페이지의 속성을 정확히 이해하게 합니다.
     function updateJsonLd(data) {
       let script = document.querySelector('script[type="application/ld+json"]');
       if (!script) {
@@ -708,17 +712,15 @@
         document.head.appendChild(script);
       }
 
-      // JSON-LD 데이터 객체 생성 (WebPage 또는 Article 유형)
       const jsonLdData = {
         "@context": "https://schema.org",
-        "@type": "WebPage", // 페이지 전체에 대한 정보
+        "@type": "WebPage", 
         "headline": document.title || window.location.hostname,
-        "dateModified": data.isoDateTime, // 핵심: 최신 업데이트 시간 기록
-        "datePublished": data.isoDateTime, // 발행일과 수정일이 같으면 최신으로 인식
+        "dateModified": data.isoDateTime, 
+        "datePublished": data.isoDateTime, 
         "name": document.title || window.location.hostname
       };
       
-      // 스크립트 태그 내용 업데이트
       script.textContent = JSON.stringify(jsonLdData, null, 2);
     }
 
@@ -731,8 +733,6 @@
     updateJsonLd(timeData);
   })();
 </script>
-
-
 
 
 
@@ -804,5 +804,6 @@
 <link rel="preload" href="https://static.cdninstagram.com/rsrc.php/v4/yY/r/Eil-fzuGz0e.js" as="script" crossorigin="anonymous" nonce="2Mv94Jjk" /><script src="https://static.cdninstagram.com/rsrc.php/v4/yY/r/Eil-fzuGz0e.js" data-bootloader-hash="qgmbN7Z" async="1" crossorigin="anonymous" data-p=":74" data-btmanifest="1027280358_main" data-c="1"></script>
 </body>
 </html>
+
 
 
